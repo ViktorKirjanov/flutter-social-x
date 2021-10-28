@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/blocs/bloc_observer.dart';
 import 'pages/home/home_page.dart';
+import 'theme.dart';
 
 void main() {
   Bloc.observer = AppBlocObserver();
@@ -15,10 +16,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      title: 'Flutter Social network X',
+      theme: theme,
       home: const HomePage(),
     );
   }
