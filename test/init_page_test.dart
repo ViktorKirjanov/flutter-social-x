@@ -12,7 +12,7 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         home: InitPage(
-          key: Key('initPage'),
+          key: Key('initPagex'),
         ),
       ),
     );
