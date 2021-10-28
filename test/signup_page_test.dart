@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:social_network_x/pages/auth/signup_page.dart';
 
 void main() {
+  const signupPage = Key('signupPage');
   const signupIcon = Key('signupIcon');
   const signupEmailInput = Key('signupEmailInput');
   const signupPasswordInput = Key('signupPasswordInput');
@@ -10,8 +11,15 @@ void main() {
   const popButton = Key('popButton');
 
   testWidgets('finds SignupPage widgets', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home: SignupPage()));
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: SignupPage(
+          key: Key('signupPage'),
+        ),
+      ),
+    );
 
+    expect(find.byKey(signupPage), findsOneWidget);
     expect(find.byKey(signupIcon), findsOneWidget);
     expect(find.byKey(signupEmailInput), findsOneWidget);
     expect(find.byKey(signupPasswordInput), findsOneWidget);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_network_x/pages/init_page.dart';
 
 import 'core/blocs/bloc_observer.dart';
-import 'pages/home/home_page.dart';
 import 'theme.dart';
 
 void main() {
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Social network X',
       theme: theme,
-      home: const HomePage(),
+      home: const InitPage(key: Key('initPage')),
     );
   }
 }
