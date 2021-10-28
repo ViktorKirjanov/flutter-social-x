@@ -4,7 +4,7 @@ import 'package:social_network_x/pages/init_page.dart';
 
 void main() {
   testWidgets('finds HomePage widgets', (WidgetTester tester) async {
-    const signinPage = Key('initPage x');
+    const signinPage = Key('initPage');
     const signinButton = Key('signinButton');
     const signupButton = Key('signupButton');
     const googleButton = Key('googleButton');
