@@ -37,10 +37,7 @@ class GoogleButton extends StatelessWidget {
             ),
           ),
         ),
-        // onPressed: () => action,
-        onPressed: () {
-          action();
-        },
+        onPressed: () => action,
       ),
     );
   }
