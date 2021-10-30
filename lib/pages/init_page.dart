@@ -4,14 +4,11 @@ import 'package:social_network_x/pages/auth/_widgets/google_button.dart';
 import 'package:social_network_x/pages/auth/signin_page.dart';
 import 'package:social_network_x/pages/auth/signup_page.dart';
 
-class InitPage extends StatefulWidget {
+class InitPage extends StatelessWidget {
   const InitPage({Key? key}) : super(key: key);
 
-  @override
-  State<InitPage> createState() => _InitPageState();
-}
+  static Page page() => const MaterialPage<void>(child: InitPage());
 
-class _InitPageState extends State<InitPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
