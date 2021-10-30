@@ -5,6 +5,7 @@ import 'package:formz/formz.dart';
 import 'package:social_network_x/core/blocs/signin_cubit/signin_cubit.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
 import 'package:social_network_x/pages/_widgets/primary_outlined_button.dart';
+import 'package:social_network_x/pages/_widgets/primary_outlined_loading_button.dart';
 import 'package:social_network_x/pages/home/home_page.dart';
 
 import '_widgets/auth_icon.dart';
@@ -124,6 +125,9 @@ class _SigninPageState extends State<SigninPage> {
       bloc: _signInCubit,
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (_, state) {
+        if (state.status == FormzStatus.submissionInProgress) {
+          return const PrimaryOutlinedLoadingButton();
+        }
         return PrimaryOutlinedButton(
           key: const Key('signinButton'),
           title: 'Login',

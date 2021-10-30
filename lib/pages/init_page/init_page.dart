@@ -3,6 +3,7 @@ import 'package:social_network_x/pages/_widgets/primary_outlined_button.dart';
 import 'package:social_network_x/pages/auth/_widgets/google_button.dart';
 import 'package:social_network_x/pages/auth/signin_page.dart';
 import 'package:social_network_x/pages/auth/signup_page.dart';
+import 'package:social_network_x/pages/init_page/widgets/logo.dart';
 
 class InitPage extends StatelessWidget {
   const InitPage({Key? key}) : super(key: key);
@@ -18,6 +19,8 @@ class InitPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Logo(),
+              const SizedBox(height: 24.0),
               PrimaryOutlinedButton(
                 key: const Key('signinButton'),
                 title: 'Login with Email',

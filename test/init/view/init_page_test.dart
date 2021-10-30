@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:social_network_x/pages/init_page.dart';
+import 'package:social_network_x/pages/init_page/init_page.dart';
 
 void main() {
   group('InitPage', () {
@@ -10,6 +10,7 @@ void main() {
 
     testWidgets('finds InitPage widgets', (WidgetTester tester) async {
       const signinPage = Key('initPage');
+      const logoIcon = Key('logoIcon');
       const signinButton = Key('signinButton');
       const signupButton = Key('signupButton');
       const googleButton = Key('googleButton');
@@ -23,6 +24,7 @@ void main() {
       );
 
       expect(find.byKey(signinPage), findsOneWidget);
+      expect(find.byKey(logoIcon), findsOneWidget);
       expect(find.byKey(signinButton), findsOneWidget);
       expect(find.byKey(signupButton), findsOneWidget);
       expect(find.byKey(googleButton), findsOneWidget);

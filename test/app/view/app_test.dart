@@ -8,7 +8,7 @@ import 'package:social_network_x/core/models/user_model.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
 import 'package:social_network_x/main.dart';
 import 'package:social_network_x/pages/home/home_page.dart';
-import 'package:social_network_x/pages/init_page.dart';
+import 'package:social_network_x/pages/init_page/init_page.dart';
 
 class MockUser extends Mock implements User {}
 
@@ -91,7 +91,6 @@ void main() {
 
     testWidgets('navigates to HomePage when authenticated', (tester) async {
       final user = MockUser();
-
       when(() => user.id).thenReturn('123');
       when(() => user.email).thenReturn('test@gmail.com');
       when(() => appBloc.state).thenReturn(AppState.authenticated(user));

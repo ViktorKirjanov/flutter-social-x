@@ -5,7 +5,7 @@ import 'package:provider/src/provider.dart';
 import 'package:social_network_x/core/blocs/app_bloc/app_bloc.dart';
 import 'package:social_network_x/pages/_widgets/primary_outlined_button.dart';
 
-import '../init_page.dart';
+import '../init_page/init_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -34,27 +34,30 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 4.0),
             Text(user.name ?? ''),
             const SizedBox(height: 4.0),
-            PrimaryOutlinedButton(
-                title: 'Logout',
-                action: () {
-                  context.read<AppBloc>().add(AppLogoutRequested());
-                  Navigator.of(
-                    context,
-                    rootNavigator: true,
-                  ).pushAndRemoveUntil(
-                    MaterialPageRoute<bool>(
-                      builder: (BuildContext context) => const InitPage(
-                        key: Key('initPage'),
-                      ),
-                    ),
-                    (Route<dynamic> route) => false,
-                  );
-                }
-                // BlocProvider.of<AppBloc>(context).add(AppLogoutRequested()),
-                ),
+            _buildLogoutButton(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildLogoutButton() {
+    return PrimaryOutlinedButton(
+      title: 'Logout',
+      action: () {
+        context.read<AppBloc>().add(AppLogoutRequested());
+        Navigator.of(
+          context,
+          rootNavigator: true,
+        ).pushAndRemoveUntil(
+          MaterialPageRoute<bool>(
+            builder: (BuildContext context) => const InitPage(
+              key: Key('initPage'),
+            ),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      },
     );
   }
 }
