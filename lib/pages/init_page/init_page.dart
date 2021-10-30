@@ -3,15 +3,13 @@ import 'package:social_network_x/pages/_widgets/primary_outlined_button.dart';
 import 'package:social_network_x/pages/auth/_widgets/google_button.dart';
 import 'package:social_network_x/pages/auth/signin_page.dart';
 import 'package:social_network_x/pages/auth/signup_page.dart';
+import 'package:social_network_x/pages/init_page/widgets/logo.dart';
 
-class InitPage extends StatefulWidget {
+class InitPage extends StatelessWidget {
   const InitPage({Key? key}) : super(key: key);
 
-  @override
-  State<InitPage> createState() => _InitPageState();
-}
+  static Page page() => const MaterialPage<void>(child: InitPage());
 
-class _InitPageState extends State<InitPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +19,8 @@ class _InitPageState extends State<InitPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Logo(),
+              const SizedBox(height: 24.0),
               PrimaryOutlinedButton(
                 key: const Key('signinButton'),
                 title: 'Login with Email',

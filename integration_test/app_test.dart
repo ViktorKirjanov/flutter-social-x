@@ -18,7 +18,7 @@ void main() {
 
       await tester.tap(find.byKey(const Key('popButton')));
       await tester.pumpAndSettle();
-      expect(find.byKey(const Key('initPageKey')), findsOneWidget);
+      expect(find.byKey(const Key('initPage')), findsOneWidget);
 
       await tester.tap(find.byKey(const Key('signupButton')));
       await tester.pumpAndSettle();
@@ -26,7 +26,7 @@ void main() {
 
       await tester.tap(find.byKey(const Key('popButton')));
       await tester.pumpAndSettle();
-      expect(find.byKey(const Key('initPageKey')), findsOneWidget);
+      expect(find.byKey(const Key('initPage')), findsOneWidget);
     });
   });
 }
