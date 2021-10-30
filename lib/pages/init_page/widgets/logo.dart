@@ -7,6 +7,7 @@ class Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShaderMask(
+      key: const Key('logoIcon'),
       child: const SizedBox(
         width: 150 * 1.2,
         height: 150 * 1.2,
