@@ -46,8 +46,8 @@ class _SignupPageState extends State<SignupPage> {
               rootNavigator: true,
             ).pushAndRemoveUntil(
               MaterialPageRoute<bool>(
-                builder: (BuildContext context) => const HomePage(
-                  key: Key('homePage'),
+                builder: (BuildContext context) => HomePage(
+                  key: const Key('homePage'),
                 ),
               ),
               (Route<dynamic> route) => false,
