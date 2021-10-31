@@ -74,7 +74,7 @@ void main() {
               home: BlocBuilder<AppBloc, AppState>(
                 builder: (_, state) {
                   if (state.status == AppStatus.authenticated) {
-                    return const HomePage(key: Key('homePage'));
+                    return HomePage(key: const Key('homePage'));
                   } else if (state.status == AppStatus.unauthenticated) {
                     return const InitPage(key: Key('initPage'));
                   }
@@ -104,7 +104,7 @@ void main() {
               home: BlocBuilder<AppBloc, AppState>(
                 builder: (_, state) {
                   if (state.status == AppStatus.authenticated) {
-                    return const HomePage(key: Key('homePage'));
+                    return HomePage(key: const Key('homePage'));
                   } else if (state.status == AppStatus.unauthenticated) {
                     return const InitPage(key: Key('initPage'));
                   }
