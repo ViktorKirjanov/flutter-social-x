@@ -15,6 +15,7 @@ class PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      key: const Key('passwordInputKey'),
       controller: passwordController,
       decoration: InputDecoration(
         labelText: 'Password',

@@ -5,19 +5,28 @@ import 'package:mocktail/mocktail.dart';
 import 'package:social_network_x/core/blocs/app_bloc/app_bloc.dart';
 import 'package:social_network_x/core/models/user_model.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
+import 'package:social_network_x/core/repositories/firebase_user_repository.dart';
+
+import '../../consts.dart';
 
 class MockAuthenticationRepository extends Mock
     implements AuthenticationRepository {}
 
 class MockUser extends Mock implements User {}
 
+class MockFirebaseUserRepository extends Mock
+    implements FirebaseUserRepository {}
+
 void main() {
   group('AppBloc', () {
     final user = MockUser();
     late AuthenticationRepository authenticationRepository;
+    late FirebaseUserRepository userRepository;
 
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();
+      userRepository = MockFirebaseUserRepository();
+
       when(() => authenticationRepository.user).thenAnswer(
         (_) => Stream.empty(),
       );
@@ -25,25 +34,53 @@ void main() {
 
     test('initial state is unauthenticated when user is empty', () {
       expect(
-        AppBloc(authenticationRepository: authenticationRepository).state,
+        AppBloc(
+                authenticationRepository: authenticationRepository,
+                userRepository: userRepository)
+            .state,
         AppState.unauthenticated(),
       );
     });
 
-    group('UserChanged', () {
+    group('UserChanged.', () {
       blocTest<AppBloc, AppState>(
-        'emits authenticated when user is not empty',
+        'Emits authenticated when user is not empty wuth username',
         setUp: () {
+          when(() => user.id).thenReturn(userId);
           when(() => user.isNotEmpty).thenReturn(true);
+          when(() => userRepository.hasUser(userId))
+              .thenAnswer((_) async => true);
+
           when(() => authenticationRepository.user).thenAnswer(
             (_) => Stream.value(user),
           );
         },
         build: () => AppBloc(
           authenticationRepository: authenticationRepository,
+          userRepository: userRepository,
         ),
         seed: () => AppState.unauthenticated(),
         expect: () => [AppState.authenticated(user)],
+      );
+
+      blocTest<AppBloc, AppState>(
+        'Emits authenticated when user is not empty wuthout username',
+        setUp: () {
+          when(() => user.id).thenReturn(userId);
+          when(() => user.isNotEmpty).thenReturn(true);
+          when(() => userRepository.hasUser(userId))
+              .thenAnswer((_) async => false);
+
+          when(() => authenticationRepository.user).thenAnswer(
+            (_) => Stream.value(user),
+          );
+        },
+        build: () => AppBloc(
+          authenticationRepository: authenticationRepository,
+          userRepository: userRepository,
+        ),
+        seed: () => AppState.unauthenticated(),
+        expect: () => [AppState.authenticatedWithUsernameRequired(user)],
       );
 
       blocTest<AppBloc, AppState>(
@@ -55,6 +92,7 @@ void main() {
         },
         build: () => AppBloc(
           authenticationRepository: authenticationRepository,
+          userRepository: userRepository,
         ),
         expect: () => [AppState.unauthenticated()],
       );
@@ -65,6 +103,7 @@ void main() {
         'invokes logOut',
         build: () => AppBloc(
           authenticationRepository: authenticationRepository,
+          userRepository: userRepository,
         ),
         act: (bloc) => bloc.add(AppLogoutRequested()),
         verify: (_) {

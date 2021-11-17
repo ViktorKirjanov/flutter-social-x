@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formz/formz.dart';
 import 'package:social_network_x/core/blocs/signin_cubit/signin_cubit.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
+import 'package:social_network_x/core/repositories/firebase_user_repository.dart';
 import 'package:social_network_x/pages/_widgets/primary_outlined_button.dart';
 import 'package:social_network_x/pages/_widgets/primary_outlined_loading_button.dart';
 import 'package:social_network_x/pages/home/home_page.dart';
@@ -12,6 +13,7 @@ import '_widgets/auth_icon.dart';
 import '_widgets/email_input.dart';
 import '_widgets/password_input.dart';
 import '_widgets/pop_button.dart';
+import 'create_username_page.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({Key? key}) : super(key: key);
@@ -31,7 +33,10 @@ class _SigninPageState extends State<SigninPage> {
   @override
   void initState() {
     super.initState();
-    _signInCubit = SignInCubit(context.read<AuthenticationRepository>());
+    _signInCubit = SignInCubit(
+      context.read<AuthenticationRepository>(),
+      FirebaseUserRepository(),
+    );
   }
 
   @override
@@ -41,17 +46,31 @@ class _SigninPageState extends State<SigninPage> {
         bloc: _signInCubit,
         listener: (context, state) async {
           if (state.status.isSubmissionSuccess) {
-            Navigator.of(
-              context,
-              rootNavigator: true,
-            ).pushAndRemoveUntil(
-              MaterialPageRoute<bool>(
-                builder: (BuildContext context) => HomePage(
-                  key: const Key('homePage'),
+            if (state.hasUsername) {
+              Navigator.of(
+                context,
+                rootNavigator: true,
+              ).pushAndRemoveUntil(
+                MaterialPageRoute<bool>(
+                  builder: (BuildContext context) => HomePage(
+                    key: const Key('homePage'),
+                  ),
                 ),
-              ),
-              (Route<dynamic> route) => false,
-            );
+                (Route<dynamic> route) => false,
+              );
+            } else {
+              Navigator.of(
+                context,
+                rootNavigator: true,
+              ).pushAndRemoveUntil(
+                MaterialPageRoute<bool>(
+                  builder: (BuildContext context) => const CreateUsernamePage(
+                    key: Key('createUsernamePage'),
+                  ),
+                ),
+                (Route<dynamic> route) => false,
+              );
+            }
           } else if (state.status.isSubmissionFailure) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
@@ -96,7 +115,6 @@ class _SigninPageState extends State<SigninPage> {
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (_, state) {
         return EmailInput(
-          key: const Key('signinEmailInput'),
           emailController: _emailController,
           errorText: state.email.invalid ? 'invalid email' : null,
           onChanged: (email) => _signInCubit.emailChanged(email),
@@ -111,7 +129,6 @@ class _SigninPageState extends State<SigninPage> {
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (_, state) {
         return PasswordInput(
-          key: const Key('signinPasswordInput'),
           passwordController: _passwordController,
           onChanged: (password) => _signInCubit.passwordChanged(password),
           errorText: state.password.invalid ? 'invalid password' : null,
@@ -129,7 +146,7 @@ class _SigninPageState extends State<SigninPage> {
           return const PrimaryOutlinedLoadingButton();
         }
         return PrimaryOutlinedButton(
-          key: const Key('signinButton'),
+          key: const Key('signinButtonKey'),
           title: 'Login',
           action: () => _signInCubit.logInWithCredentials(),
         );

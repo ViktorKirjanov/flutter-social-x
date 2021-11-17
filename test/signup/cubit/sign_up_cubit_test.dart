@@ -3,24 +3,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:formz/formz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:social_network_x/core/blocs/signup_cubit/signup_cubit.dart';
-import 'package:social_network_x/core/models/email_model.dart';
-import 'package:social_network_x/core/models/password_model.dart';
+import 'package:social_network_x/core/models/formz/email_model.dart';
+import 'package:social_network_x/core/models/formz/password_model.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
+
+import '../../consts.dart';
 
 class MockAuthenticationRepository extends Mock
     implements AuthenticationRepository {}
 
 void main() {
-  const invalidEmailString = 'invalid';
   const invalidEmail = Email.dirty(invalidEmailString);
-
-  const validEmailString = 'test@gmail.com';
   const validEmail = Email.dirty(validEmailString);
-
-  const invalidPasswordString = 'invalid';
   const invalidPassword = Password.dirty(invalidPasswordString);
-
-  const validPasswordString = 't0pS3cret1234!';
   const validPassword = Password.dirty(validPasswordString);
 
   group('SignUpCubit', () {

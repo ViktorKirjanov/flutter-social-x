@@ -6,7 +6,7 @@ import 'package:social_network_x/core/blocs/signup_cubit/signup_cubit.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
 import 'package:social_network_x/pages/_widgets/primary_outlined_button.dart';
 import 'package:social_network_x/pages/_widgets/primary_outlined_loading_button.dart';
-import 'package:social_network_x/pages/home/home_page.dart';
+import 'package:social_network_x/pages/auth/create_username_page.dart';
 
 import '_widgets/auth_icon.dart';
 import '_widgets/email_input.dart';
@@ -46,8 +46,8 @@ class _SignupPageState extends State<SignupPage> {
               rootNavigator: true,
             ).pushAndRemoveUntil(
               MaterialPageRoute<bool>(
-                builder: (BuildContext context) => HomePage(
-                  key: const Key('homePage'),
+                builder: (BuildContext context) => const CreateUsernamePage(
+                  key: Key('homePage'),
                 ),
               ),
               (Route<dynamic> route) => false,
@@ -72,7 +72,7 @@ class _SignupPageState extends State<SignupPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const AuthIcon(
-                    key: Key('signupIcon'),
+                    key: Key('signupIconKey'),
                     iconData: FontAwesomeIcons.user,
                   ),
                   const SizedBox(height: 24.0),
@@ -96,7 +96,7 @@ class _SignupPageState extends State<SignupPage> {
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (_, state) {
         return EmailInput(
-          key: const Key('signupEmailInput'),
+          key: const Key('signupEmailInputKey'),
           emailController: _emailController,
           errorText: state.email.invalid ? 'invalid email' : null,
           onChanged: (email) => _signupCubit.emailChanged(email),
@@ -111,7 +111,7 @@ class _SignupPageState extends State<SignupPage> {
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (_, state) {
         return PasswordInput(
-          key: const Key('signupPasswordInput'),
+          key: const Key('signupPasswordInputKey'),
           passwordController: _passwordController,
           onChanged: (password) => _signupCubit.passwordChanged(password),
           errorText: state.password.invalid ? 'invalid password' : null,
@@ -129,7 +129,7 @@ class _SignupPageState extends State<SignupPage> {
           return const PrimaryOutlinedLoadingButton();
         }
         return PrimaryOutlinedButton(
-          key: const Key('signupButton'),
+          key: const Key('signupButtonKey'),
           title: 'Register',
           action: () => _signupCubit.signUpFormSubmitted(),
         );

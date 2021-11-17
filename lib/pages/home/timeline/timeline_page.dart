@@ -10,7 +10,7 @@ class TimelinePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TimelinePage'),
+        title: const Text('Timeline'),
       ),
       body: const SafeArea(
         child: Padding(

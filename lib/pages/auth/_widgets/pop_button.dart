@@ -11,7 +11,7 @@ class PopButton extends StatelessWidget {
       left: 16.0,
       child: SafeArea(
         child: IconButton(
-          key: const Key('popButton'),
+          key: const Key('popButtonKey'),
           icon: FaIcon(
             FontAwesomeIcons.arrowLeft,
             size: 25.0,

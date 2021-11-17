@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_x/pages/auth/create_username_page.dart';
 
 import 'activity_feed/activity_feed_page.dart';
 import 'create/create_page.dart';

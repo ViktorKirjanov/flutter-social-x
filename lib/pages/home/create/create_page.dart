@@ -10,7 +10,7 @@ class CreatePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CreatePage'),
+        title: const Text('Create post'),
       ),
       body: const SafeArea(
         child: Padding(

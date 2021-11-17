@@ -10,7 +10,7 @@ class ActivityFeedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ActivityFeedPage'),
+        title: const Text('Activity feed'),
       ),
       body: const SafeArea(
         child: Padding(

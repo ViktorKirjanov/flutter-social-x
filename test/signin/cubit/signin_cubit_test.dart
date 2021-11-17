@@ -4,57 +4,66 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:formz/formz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:social_network_x/core/blocs/signin_cubit/signin_cubit.dart';
-import 'package:social_network_x/core/models/email_model.dart';
-import 'package:social_network_x/core/models/password_model.dart';
+import 'package:social_network_x/core/models/formz/email_model.dart';
+import 'package:social_network_x/core/models/formz/password_model.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
+import 'package:social_network_x/core/repositories/firebase_user_repository.dart';
+
+import '../../consts.dart';
 
 class MockAuthenticationRepository extends Mock
     implements AuthenticationRepository {}
 
+class MockFirebaseUserRepository extends Mock
+    implements FirebaseUserRepository {}
+
 void main() {
-  const invalidEmailString = 'invalid';
   const invalidEmail = Email.dirty(invalidEmailString);
-
-  const validEmailString = 'test@gmail.com';
   const validEmail = Email.dirty(validEmailString);
-
-  const invalidPasswordString = 'invalid';
   const invalidPassword = Password.dirty(invalidPasswordString);
-
-  const validPasswordString = 't0pS3cret1234!';
   const validPassword = Password.dirty(validPasswordString);
 
-  group('SignInCubit', () {
+  group('SignInCubit.', () {
     late AuthenticationRepository authenticationRepository;
+    late MockFirebaseUserRepository userRepository;
+    late SignInCubit signInCubit;
 
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();
+      userRepository = MockFirebaseUserRepository();
+      signInCubit = SignInCubit(authenticationRepository, userRepository);
 
       when(
         () => authenticationRepository.logInWithEmailAndPassword(
           email: any(named: 'email'),
           password: any(named: 'password'),
         ),
-      ).thenAnswer((_) async {});
+      ).thenAnswer((_) async => userId);
     });
 
     test('initial state is SignInState', () {
-      expect(SignInCubit(authenticationRepository).state, SignInState());
+      expect(
+        SignInCubit(authenticationRepository, userRepository).state,
+        SignInState(),
+      );
     });
 
-    group('emailChanged', () {
+    group('emailChanged.', () {
       blocTest<SignInCubit, SignInState>(
-        'emits [invalid] when email/password are invalid',
-        build: () => SignInCubit(authenticationRepository),
+        'emits [invalid] when email/password are invalid. ',
+        build: () => signInCubit,
         act: (cubit) => cubit.emailChanged(invalidEmailString),
         expect: () => const <SignInState>[
-          SignInState(email: invalidEmail, status: FormzStatus.invalid),
+          SignInState(
+            email: invalidEmail,
+            status: FormzStatus.invalid,
+          ),
         ],
       );
 
       blocTest<SignInCubit, SignInState>(
         'emits [valid] when email/password are valid',
-        build: () => SignInCubit(authenticationRepository),
+        build: () => signInCubit,
         seed: () => SignInState(password: validPassword),
         act: (cubit) => cubit.emailChanged(validEmailString),
         expect: () => const <SignInState>[
@@ -67,10 +76,10 @@ void main() {
       );
     });
 
-    group('passwordChanged', () {
+    group('passwordChanged.', () {
       blocTest<SignInCubit, SignInState>(
         'emits [invalid] when email/password are invalid',
-        build: () => SignInCubit(authenticationRepository),
+        build: () => signInCubit,
         act: (cubit) => cubit.passwordChanged(invalidPasswordString),
         expect: () => const <SignInState>[
           SignInState(
@@ -82,7 +91,7 @@ void main() {
 
       blocTest<SignInCubit, SignInState>(
         'emits [valid] when email/password are valid',
-        build: () => SignInCubit(authenticationRepository),
+        build: () => signInCubit,
         seed: () => SignInState(email: validEmail),
         act: (cubit) => cubit.passwordChanged(validPasswordString),
         expect: () => const <SignInState>[
@@ -95,17 +104,17 @@ void main() {
       );
     });
 
-    group('logInWithCredentials', () {
+    group('logInWithCredentials.', () {
       blocTest<SignInCubit, SignInState>(
-        'does nothing when status is not validated',
-        build: () => SignInCubit(authenticationRepository),
+        'Does nothing when status is not validated',
+        build: () => signInCubit,
         act: (cubit) => cubit.logInWithCredentials(),
         expect: () => const <SignInState>[],
       );
 
       blocTest<SignInCubit, SignInState>(
-        'calls logInWithEmailAndPassword with correct email/password',
-        build: () => SignInCubit(authenticationRepository),
+        'Calls logInWithEmailAndPassword with correct email and password',
+        build: () => signInCubit,
         seed: () => SignInState(
           status: FormzStatus.valid,
           email: validEmail,
@@ -124,8 +133,13 @@ void main() {
 
       blocTest<SignInCubit, SignInState>(
         'emits [submissionInProgress, submissionSuccess] '
-        'when logInWithEmailAndPassword succeeds',
-        build: () => SignInCubit(authenticationRepository),
+        'when logInWithEmailAndPassword succeeds and has username',
+        setUp: () {
+          when(
+            () => userRepository.hasUser(userId),
+          ).thenAnswer((_) async => true);
+        },
+        build: () => signInCubit,
         seed: () => SignInState(
           status: FormzStatus.valid,
           email: validEmail,
@@ -137,11 +151,44 @@ void main() {
             status: FormzStatus.submissionInProgress,
             email: validEmail,
             password: validPassword,
+            hasUsername: false,
           ),
           SignInState(
             status: FormzStatus.submissionSuccess,
             email: validEmail,
             password: validPassword,
+            hasUsername: true,
+          )
+        ],
+      );
+
+      blocTest<SignInCubit, SignInState>(
+        'emits [submissionInProgress, submissionSuccess] '
+        'when logInWithEmailAndPassword succeeds and has no username',
+        setUp: () {
+          when(
+            () => userRepository.hasUser(userId),
+          ).thenAnswer((_) async => false);
+        },
+        build: () => signInCubit,
+        seed: () => SignInState(
+          status: FormzStatus.valid,
+          email: validEmail,
+          password: validPassword,
+        ),
+        act: (cubit) => cubit.logInWithCredentials(),
+        expect: () => const <SignInState>[
+          SignInState(
+            status: FormzStatus.submissionInProgress,
+            email: validEmail,
+            password: validPassword,
+            hasUsername: false,
+          ),
+          SignInState(
+            status: FormzStatus.submissionSuccess,
+            email: validEmail,
+            password: validPassword,
+            hasUsername: false,
           )
         ],
       );
@@ -157,7 +204,7 @@ void main() {
             ),
           ).thenThrow(Exception('oops'));
         },
-        build: () => SignInCubit(authenticationRepository),
+        build: () => signInCubit,
         seed: () => SignInState(
           status: FormzStatus.valid,
           email: validEmail,
@@ -169,11 +216,13 @@ void main() {
             status: FormzStatus.submissionInProgress,
             email: validEmail,
             password: validPassword,
+            hasUsername: false,
           ),
           SignInState(
             status: FormzStatus.submissionFailure,
             email: validEmail,
             password: validPassword,
+            hasUsername: false,
           )
         ],
       );
