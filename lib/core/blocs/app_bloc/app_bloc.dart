@@ -5,35 +5,49 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:social_network_x/core/models/user_model.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
+import 'package:social_network_x/core/repositories/firebase_user_repository.dart';
 
 part 'app_event.dart';
 part 'app_state.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc({required AuthenticationRepository authenticationRepository})
-      : _authenticationRepository = authenticationRepository,
+  final AuthenticationRepository _authenticationRepository;
+  final FirebaseUserRepository _userRepository;
+
+  late StreamSubscription<User> _userSubscription;
+
+  AppBloc({
+    required AuthenticationRepository authenticationRepository,
+    required FirebaseUserRepository userRepository,
+  })  : _authenticationRepository = authenticationRepository,
+        _userRepository = userRepository,
         super(const AppState.unauthenticated()) {
     _userSubscription = _authenticationRepository.user.listen(_onUserChanged);
   }
-
-  final AuthenticationRepository _authenticationRepository;
-  late final StreamSubscription<User> _userSubscription;
 
   void _onUserChanged(User user) => add(AppUserChanged(user));
 
   @override
   Stream<AppState> mapEventToState(AppEvent event) async* {
     if (event is AppUserChanged) {
-      yield _mapUserChangedToState(event, state);
+      yield* _mapUserChangedToState(event, state);
     } else if (event is AppLogoutRequested) {
       unawaited(_authenticationRepository.logOut());
     }
   }
 
-  AppState _mapUserChangedToState(AppUserChanged event, AppState state) {
-    return event.user.isNotEmpty
-        ? AppState.authenticated(event.user)
-        : const AppState.unauthenticated();
+  Stream<AppState> _mapUserChangedToState(
+      AppUserChanged event, AppState state) async* {
+    if (event.user.isNotEmpty) {
+      var hasUsername = await _userRepository.hasUser(event.user.id);
+      if (hasUsername) {
+        yield AppState.authenticated(event.user);
+      } else {
+        yield AppState.authenticatedWithUsernameRequired(event.user);
+      }
+    } else {
+      yield const AppState.unauthenticated();
+    }
   }
 
   @override

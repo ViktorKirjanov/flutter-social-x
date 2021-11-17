@@ -22,7 +22,7 @@ class InitPage extends StatelessWidget {
               const Logo(),
               const SizedBox(height: 24.0),
               PrimaryOutlinedButton(
-                key: const Key('signinButton'),
+                key: const Key('signinButtonKey'),
                 title: 'Login with Email',
                 action: () => Navigator.push(
                   context,
@@ -35,7 +35,7 @@ class InitPage extends StatelessWidget {
               ),
               const SizedBox(height: 12.0),
               PrimaryOutlinedButton(
-                key: const Key('signupButton'),
+                key: const Key('signupButtonKey'),
                 title: 'Create account',
                 action: () => Navigator.push(
                   context,
@@ -47,7 +47,7 @@ class InitPage extends StatelessWidget {
               ),
               const SizedBox(height: 12.0),
               GoogleButton(
-                key: const Key('googleButton'),
+                key: const Key('googleButtonKey'),
                 action: () => {},
               ),
             ],

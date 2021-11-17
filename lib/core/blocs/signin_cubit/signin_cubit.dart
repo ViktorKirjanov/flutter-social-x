@@ -1,16 +1,19 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:social_network_x/core/models/email_model.dart';
-import 'package:social_network_x/core/models/password_model.dart';
+import 'package:social_network_x/core/models/formz/email_model.dart';
+import 'package:social_network_x/core/models/formz/password_model.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
+import 'package:social_network_x/core/repositories/firebase_user_repository.dart';
 
 part 'signin_state.dart';
 
 class SignInCubit extends Cubit<SignInState> {
-  SignInCubit(this._authenticationRepository) : super(const SignInState());
-
   final AuthenticationRepository _authenticationRepository;
+  final FirebaseUserRepository _userRepository;
+
+  SignInCubit(this._authenticationRepository, this._userRepository)
+      : super(const SignInState());
 
   void emailChanged(String value) {
     final email = Email.dirty(value);
@@ -32,11 +35,17 @@ class SignInCubit extends Cubit<SignInState> {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
-      await _authenticationRepository.logInWithEmailAndPassword(
+      var uid = await _authenticationRepository.logInWithEmailAndPassword(
         email: state.email.value,
         password: state.password.value,
       );
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      var hasUsername = await _userRepository.hasUser(uid);
+      emit(
+        state.copyWith(
+          hasUsername: hasUsername,
+          status: FormzStatus.submissionSuccess,
+        ),
+      );
     } on LogInWithEmailAndPasswordFailure catch (e) {
       emit(state.copyWith(
         errorMessage: e.message,

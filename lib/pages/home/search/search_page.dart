@@ -10,7 +10,7 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SearchPage'),
+        title: const Text('Search'),
       ),
       body: const SafeArea(
         child: Padding(

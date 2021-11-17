@@ -1,0 +1,10 @@
+const userId = 'uid';
+const invalidEmailString = 'invalid-email';
+const validEmailString = 'test@gmail.com';
+const invalidPasswordString = 'invalid-password';
+const validPasswordString = 't0pS3cret1234!';
+const invalidUsername = 'invalid username !';
+const validUsername = 'ValidUsername123X';
+const invalidUsernameMessage = 'invalid username';
+const invalidEmailMessageString = 'invalid email';
+const invalidPasswordMessageString = 'invalid password';

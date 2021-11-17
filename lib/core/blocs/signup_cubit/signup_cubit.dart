@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:social_network_x/core/models/email_model.dart';
-import 'package:social_network_x/core/models/password_model.dart';
+import 'package:social_network_x/core/models/formz/email_model.dart';
+import 'package:social_network_x/core/models/formz/password_model.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
 
 part 'signup_state.dart';

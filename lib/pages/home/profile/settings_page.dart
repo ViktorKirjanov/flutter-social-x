@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_network_x/core/blocs/app_bloc/app_bloc.dart';
 import 'package:social_network_x/pages/_widgets/primary_outlined_button.dart';
 import 'package:social_network_x/pages/init_page/init_page.dart';
@@ -34,14 +35,14 @@ class SettingsPage extends StatelessWidget {
       key: const Key('logout'),
       title: 'Logout',
       action: () {
-        context.read<AppBloc>().add(AppLogoutRequested());
+        BlocProvider.of<AppBloc>(context).add(AppLogoutRequested());
         Navigator.of(
           context,
           rootNavigator: true,
         ).pushAndRemoveUntil(
           MaterialPageRoute<bool>(
             builder: (BuildContext context) => const InitPage(
-              key: Key('initPage'),
+              key: Key('initPageKey'),
             ),
           ),
           (Route<dynamic> route) => false,

@@ -6,18 +6,22 @@ import 'package:mocktail/mocktail.dart';
 import 'package:social_network_x/core/blocs/app_bloc/app_bloc.dart';
 import 'package:social_network_x/core/models/user_model.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
+import 'package:social_network_x/core/repositories/firebase_user_repository.dart';
 import 'package:social_network_x/main.dart';
 import 'package:social_network_x/pages/home/home_page.dart';
 import 'package:social_network_x/pages/init_page/init_page.dart';
+
+import '../../consts.dart';
 
 class MockUser extends Mock implements User {}
 
 class MockAuthenticationRepository extends Mock
     implements AuthenticationRepository {}
 
-class MockAppBloc extends MockBloc<AppEvent, AppState> implements AppBloc {}
+class MockFirebaseUserRepository extends Mock
+    implements FirebaseUserRepository {}
 
-class MockAppState extends MockBloc<AppEvent, AppState> implements AppState {}
+class MockAppBloc extends MockBloc<AppEvent, AppState> implements AppBloc {}
 
 class FakeAppEvent extends Fake implements AppEvent {}
 
@@ -26,14 +30,17 @@ class FakeAppState extends Fake implements AppState {}
 void main() {
   group('App', () {
     late AuthenticationRepository authenticationRepository;
+    late FirebaseUserRepository userRepository;
 
     setUpAll(() {
-      registerFallbackValue<AppEvent>(FakeAppEvent());
-      registerFallbackValue<AppState>(FakeAppState());
+      registerFallbackValue(FakeAppEvent());
+      registerFallbackValue(FakeAppState());
     });
 
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();
+      userRepository = MockFirebaseUserRepository();
+
       when(() => authenticationRepository.user).thenAnswer(
         (_) => const Stream.empty(),
       );
@@ -41,7 +48,10 @@ void main() {
 
     testWidgets('renders AppView', (tester) async {
       await tester.pumpWidget(
-        App(authenticationRepository: authenticationRepository),
+        App(
+          authenticationRepository: authenticationRepository,
+          userRepository: userRepository,
+        ),
       );
       await tester.pump();
       expect(find.byType(App), findsOneWidget);
@@ -53,8 +63,8 @@ void main() {
     late AppBloc appBloc;
 
     setUpAll(() {
-      registerFallbackValue<AppEvent>(FakeAppEvent());
-      registerFallbackValue<AppState>(FakeAppState());
+      registerFallbackValue(FakeAppEvent());
+      registerFallbackValue(FakeAppState());
     });
 
     setUp(() {
@@ -91,8 +101,8 @@ void main() {
 
     testWidgets('navigates to HomePage when authenticated', (tester) async {
       final user = MockUser();
-      when(() => user.id).thenReturn('123');
-      when(() => user.email).thenReturn('test@gmail.com');
+      when(() => user.id).thenReturn(userId);
+      when(() => user.email).thenReturn(validEmailString);
       when(() => appBloc.state).thenReturn(AppState.authenticated(user));
       await tester.pumpWidget(
         RepositoryProvider.value(

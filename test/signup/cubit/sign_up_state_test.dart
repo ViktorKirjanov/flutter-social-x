@@ -2,8 +2,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formz/formz.dart';
 import 'package:social_network_x/core/blocs/signup_cubit/signup_cubit.dart';
-import 'package:social_network_x/core/models/email_model.dart';
-import 'package:social_network_x/core/models/password_model.dart';
+import 'package:social_network_x/core/models/formz/email_model.dart';
+import 'package:social_network_x/core/models/formz/password_model.dart';
 
 void main() {
   const email = Email.dirty('email');
