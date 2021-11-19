@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formz/formz.dart';
+import 'package:social_network_x/core/blocs/app_bloc/app_bloc.dart';
 import 'package:social_network_x/core/blocs/signup_cubit/signup_cubit.dart';
 import 'package:social_network_x/core/repositories/authentication_repository.dart';
 import 'package:social_network_x/pages/_widgets/primary_outlined_button.dart';
@@ -36,11 +37,25 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocListener<SignUpCubit, SignUpState>(
+    return MultiBlocListener(listeners: [
+      BlocListener<SignUpCubit, SignUpState>(
         bloc: _signupCubit,
         listener: (context, state) async {
-          if (state.status.isSubmissionSuccess) {
+          if (state.status.isSubmissionFailure) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMessage ?? 'Loogin Failure'),
+                  padding: const EdgeInsets.all(25),
+                ),
+              );
+          }
+        },
+      ),
+      BlocListener<AppBloc, AppState>(
+        listener: (context, state) {
+          if (state.status == AppStatus.authenticatedWithUsernameRequired) {
             Navigator.of(
               context,
               rootNavigator: true,
@@ -52,40 +67,36 @@ class _SignupPageState extends State<SignupPage> {
               ),
               (Route<dynamic> route) => false,
             );
-          } else if (state.status.isSubmissionFailure) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Text(state.errorMessage ?? 'Loogin Failure'),
-                  padding: const EdgeInsets.all(25),
-                ),
-              );
           }
         },
-        child: Stack(
-          children: [
-            const PopButton(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const AuthIcon(
-                    key: Key('signupIconKey'),
-                    iconData: FontAwesomeIcons.user,
-                  ),
-                  const SizedBox(height: 24.0),
-                  _buildEmailInput(),
-                  const SizedBox(height: 24.0),
-                  _buildPasswordInput(),
-                  const SizedBox(height: 24.0),
-                  _buildSignUpButton(),
-                ],
-              ),
+      ),
+    ], child: _buildContent());
+  }
+
+  Widget _buildContent() {
+    return Scaffold(
+      body: Stack(
+        children: [
+          const PopButton(),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const AuthIcon(
+                  key: Key('signupIconKey'),
+                  iconData: FontAwesomeIcons.user,
+                ),
+                const SizedBox(height: 24.0),
+                _buildEmailInput(),
+                const SizedBox(height: 24.0),
+                _buildPasswordInput(),
+                const SizedBox(height: 24.0),
+                _buildSignUpButton(),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

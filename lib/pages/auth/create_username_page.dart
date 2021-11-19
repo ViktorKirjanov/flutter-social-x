@@ -27,9 +27,9 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
 
   @override
   void initState() {
+    super.initState();
     var user = BlocProvider.of<AppBloc>(context).state.user;
     _createUsernameCubit = CreateUsernameCubit(FirebaseUserRepository(), user);
-    super.initState();
   }
 
   @override

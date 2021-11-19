@@ -15,7 +15,7 @@ class FirebaseUserRepository implements UserRepository {
 
   @override
   createUser(User user, String username) async {
-    var account = Account(user.id, username, user.email!);
+    var account = Account(user.id, username, user.email!, DateTime.now());
     await _userCollection.doc(user.id).set((account.toJson()));
   }
 }

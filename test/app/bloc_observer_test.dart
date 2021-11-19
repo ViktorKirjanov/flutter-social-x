@@ -26,7 +26,7 @@ void main() {
       final bloc = FakeBloc();
       final event = FakeEvent();
       AppBlocObserver().onEvent(bloc, event);
-      expect(logs, equals(['$event']));
+      expect(logs, equals(['🚀 $event']));
     }));
 
     test('onError prints error', overridePrint(() {
@@ -34,21 +34,21 @@ void main() {
       final error = Object();
       final stackTrace = FakeStackTrace();
       AppBlocObserver().onError(bloc, error, stackTrace);
-      expect(logs, equals(['$error']));
+      expect(logs, equals(['🐞 $error']));
     }));
 
     test('onChange prints change', overridePrint(() {
       final cubit = FakeCubit();
       final change = FakeChange();
       AppBlocObserver().onChange(cubit, change);
-      expect(logs, equals(['$change']));
+      expect(logs, equals(['↔️ $change']));
     }));
 
     test('onTransition prints transition', overridePrint(() {
       final bloc = FakeBloc();
       final transition = FakeTransition();
       AppBlocObserver().onTransition(bloc, transition);
-      expect(logs, equals(['$transition']));
+      expect(logs, equals(['🧻 $transition']));
     }));
   });
 }
