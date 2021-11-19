@@ -109,8 +109,6 @@ void main() {
 
       testWidgets('Add invalid email and valid password.',
           (WidgetTester tester) async {
-        ;
-
         await tester.pumpWidget(
           RepositoryProvider.value(
             value: authenticationRepository,
