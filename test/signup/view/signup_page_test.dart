@@ -53,7 +53,7 @@ void main() {
       when(() => appBloc.state).thenReturn(const AppState.unauthenticated());
     });
 
-    testWidgets('finds SignupPage widgets.', (WidgetTester tester) async {
+    testWidgets('Finds SignupPage widgets.', (WidgetTester tester) async {
       await tester.pumpWidget(
         RepositoryProvider.value(
           value: authenticationRepository,
@@ -78,9 +78,8 @@ void main() {
       expect(find.byKey(popButtonKey), findsOneWidget);
     });
 
-    group('Add email and password. ', () {
-      testWidgets('Add valid email and password. ',
-          (WidgetTester tester) async {
+    group('Add email and password.', () {
+      testWidgets('Add valid email and password.', (WidgetTester tester) async {
         await tester.pumpWidget(
           RepositoryProvider.value(
             value: authenticationRepository,
@@ -110,10 +109,21 @@ void main() {
 
       testWidgets('Add invalid email and valid password.',
           (WidgetTester tester) async {
+        ;
+
         await tester.pumpWidget(
-          RepositoryProvider<AuthenticationRepository>(
-            create: (_) => MockAuthenticationRepository(),
-            child: const MaterialApp(home: SignupPage(key: signupPageKey)),
+          RepositoryProvider.value(
+            value: authenticationRepository,
+            child: BlocProvider(
+              create: (_) => appBloc,
+              child: MaterialApp(
+                home: BlocBuilder<AppBloc, AppState>(
+                  builder: (_, state) {
+                    return const SignupPage(key: signupPageKey);
+                  },
+                ),
+              ),
+            ),
           ),
         );
 
@@ -130,12 +140,21 @@ void main() {
         expect(find.text(invalidPasswordMessageString), findsNothing);
       });
 
-      testWidgets('add valid email and invalidvalid password',
+      testWidgets('Add valid email and invalidvalid password',
           (WidgetTester tester) async {
         await tester.pumpWidget(
-          RepositoryProvider<AuthenticationRepository>(
-            create: (_) => MockAuthenticationRepository(),
-            child: const MaterialApp(home: SignupPage(key: signupPageKey)),
+          RepositoryProvider.value(
+            value: authenticationRepository,
+            child: BlocProvider(
+              create: (_) => appBloc,
+              child: MaterialApp(
+                home: BlocBuilder<AppBloc, AppState>(
+                  builder: (_, state) {
+                    return const SignupPage(key: signupPageKey);
+                  },
+                ),
+              ),
+            ),
           ),
         );
 
@@ -152,12 +171,21 @@ void main() {
         expect(find.text(invalidPasswordMessageString), findsOneWidget);
       });
 
-      testWidgets('add invalid email and  password',
+      testWidgets('Add invalid email and password',
           (WidgetTester tester) async {
         await tester.pumpWidget(
-          RepositoryProvider<AuthenticationRepository>(
-            create: (_) => MockAuthenticationRepository(),
-            child: const MaterialApp(home: SignupPage(key: signupPageKey)),
+          RepositoryProvider.value(
+            value: authenticationRepository,
+            child: BlocProvider(
+              create: (_) => appBloc,
+              child: MaterialApp(
+                home: BlocBuilder<AppBloc, AppState>(
+                  builder: (_, state) {
+                    return const SignupPage(key: signupPageKey);
+                  },
+                ),
+              ),
+            ),
           ),
         );
 
